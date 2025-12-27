@@ -20,10 +20,11 @@ def calcular_edad(fecha_matriculacion):
 
 
 # -------------------------------------------------
-# Leer modelos desde tablas.xlsx (MODELO, DESDE, HASTA, POTENCIA)
+# Leer modelos desde tablas.xlsx
 # -------------------------------------------------
 def obtener_modelos_desde_tablas():
     df = pd.read_excel("tablas.xlsx")
+    df.columns = df.columns.astype(str).str.strip()
 
     modelos = []
 
@@ -41,14 +42,14 @@ def obtener_modelos_desde_tablas():
 
 
 # -------------------------------------------------
-# Obtener valor fiscal desde tablas.xlsx (edad con tope 12)
+# Obtener valor fiscal desde tablas.xlsx
+# (edad con tope 12 años)
 # -------------------------------------------------
 def obtener_valor_fiscal(modelo_texto, edad):
     df = pd.read_excel("tablas.xlsx")
+    df.columns = df.columns.astype(str).str.strip()
 
-    # Extraer solo el nombre del modelo (antes del primer "|")
     modelo_base = modelo_texto.split("|")[0].strip()
-
     fila = df[df["MODELO"] == modelo_base]
 
     if fila.empty:
@@ -156,7 +157,6 @@ def inicio():
         revision_post_compra = float(request.form["REVISION POST COMPRA"])
         honorarios_gestion = float(request.form["HONORARIOS DE GESTIÓN"])
 
-        # Cálculo del impuesto
         if modelo == "NO ESTÁ EN TABLAS":
             base_impuesto = precio_origen
         else:
