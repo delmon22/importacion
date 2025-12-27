@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.2">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="es"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Estimador coste importación Porsche&lt;/title&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;h1&gt;Estimador de coste de importación Porsche&lt;/h1&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;form method="post"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>MODELO:</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;select name="MODELO" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value=""&gt;-- Selecciona un modelo --&lt;/option&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>{% for modelo in modelos %}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="{{ modelo }}"&gt;{{ modelo }}&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{% endfor %}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value="NO ESTÁ EN TABLAS"&gt;NO ESTÁ EN TABLAS&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>FECHA DE PRIMERA MATRICULACIÓN:</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="date" name="FECHA DE PRIMERA MATRICULACIÓN" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>PRECIO EN ORIGEN (€):</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" name="PRECIO EN ORIGEN" step="0.01" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>COSTE DE GESTIÓN EN ORIGEN (€):</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" name="COSTE DE GESTIÓN EN ORIGEN" step="0.01" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>COSTE DE REVISIÓN EN ORIGEN (€):</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" name="COSTE DE REVISIÓN EN ORIGEN" step="0.01" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>COSTE DE TRANSPORTE (€):</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" name="COSTE DE TRANSPORTE" step="0.01" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>OTROS COSTES EN ORIGEN (€):</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" name="OTROS COSTES EN ORIGEN" step="0.01" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>PROCESO DE MATRICULACIÓN (€):</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" name="PROCESO DE MATRICULACIÓN" step="0.01" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>REVISION POST COMPRA (€):</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" name="REVISION POST COMPRA" step="0.01" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>HONORARIOS DE GESTIÓN (€):</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" name="HONORARIOS DE GESTIÓN" step="0.01" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button type="submit"&gt;Calcular&lt;/button&gt;</p>
+<p class="p1">&lt;/form&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">{% if salida %}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h2&gt;Resultado&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;table border="1" cellpadding="6" cellspacing="0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;th&gt;Concepto&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;th&gt;Importe (€)&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{% for concepto, importe in salida.items() %}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;td&gt;{{ concepto }}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;td&gt;{{ "%.2f"|format(importe) }}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{% endfor %}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/table&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;br&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;form method="post" action="/descargar_excel"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button type="submit"&gt;Descargar Excel&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/form&gt;</p>
+<p class="p1">{% endif %}</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
