@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, send_file, session
+from flask import Flask, render_template, request, send_file, session, make_response
+
 from datetime import datetime, date
 from collections import OrderedDict
 import pandas as pd
@@ -165,7 +166,12 @@ def inicio():
 
         session["salida"] = salida
 
-    return render_template("index.html", salida=salida, modelos=modelos)
+    response = make_response(
+    render_template("index.html", salida=salida, modelos=modelos)
+)
+response.headers["Content-Type"] = "text/html; charset=utf-8"
+return response
+
 
 
 # -------------------------------------------------
