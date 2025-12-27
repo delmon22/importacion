@@ -7,6 +7,9 @@ import tempfile
 import numpy as np
 
 app = Flask(__name__)
+@app.route("/test")
+def test():
+    return "FLASK FUNCIONA"
 app.secret_key = "tb_984_992_secret_key"
 
 
