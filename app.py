@@ -4,6 +4,7 @@ from collections import OrderedDict
 import pandas as pd
 import math
 import tempfile
+import numpy as np
 
 app = Flask(__name__)
 app.secret_key = "tb_984_992_secret_key"
@@ -15,12 +16,11 @@ app.secret_key = "tb_984_992_secret_key"
 def calcular_edad(fecha_matriculacion):
     hoy = date.today()
     diferencia = hoy - fecha_matriculacion
-    edad = math.floor(diferencia.days / 365)
-    return edad
+    return math.floor(diferencia.days / 365)
 
 
 # -------------------------------------------------
-# Leer modelos desde tablas.xlsx
+# Leer modelos desde tablas.xlsx (robusto a NaN)
 # -------------------------------------------------
 def obtener_modelos_desde_tablas():
     df = pd.read_excel("tablas.xlsx")
@@ -30,20 +30,28 @@ def obtener_modelos_desde_tablas():
 
     for _, fila in df.iterrows():
         modelo = str(fila["MODELO"]).strip()
-        desde = str(int(fila["DESDE"]))
-        hasta = str(int(fila["HASTA"]))
-        potencia = str(int(fila["POTENCIA"]))
 
-        texto = f"{modelo} | {desde}–{hasta} | {potencia} CV"
+        # DESDE / HASTA pueden estar vacíos
+        desde = fila.get("DESDE")
+        hasta = fila.get("HASTA")
+        potencia = fila.get("POTENCIA")
+
+        partes = [modelo]
+
+        if not pd.isna(desde) and not pd.isna(hasta):
+            partes.append(f"{int(desde)}–{int(hasta)}")
+
+        if not pd.isna(potencia):
+            partes.append(f"{int(potencia)} CV")
+
+        texto = " | ".join(partes)
         modelos.append(texto)
 
-    modelos = sorted(set(modelos))
-    return modelos
+    return sorted(set(modelos))
 
 
 # -------------------------------------------------
 # Obtener valor fiscal desde tablas.xlsx
-# (edad con tope 12 años)
 # -------------------------------------------------
 def obtener_valor_fiscal(modelo_texto, edad):
     df = pd.read_excel("tablas.xlsx")
@@ -59,10 +67,9 @@ def obtener_valor_fiscal(modelo_texto, edad):
     columna_edad = str(edad_tabla)
 
     if columna_edad not in df.columns:
-        raise ValueError("Columna de edad no encontrada en tablas")
+        raise ValueError("Columna de edad no encontrada")
 
-    valor = fila[columna_edad].values[0]
-    return float(valor)
+    return float(fila[columna_edad].values[0])
 
 
 # -------------------------------------------------
@@ -91,44 +98,28 @@ def construir_salida_epigrafe_3(
     salida["REVISION POST COMPRA"] = revision_post_compra
     salida["HONORARIOS DE GESTIÓN"] = honorarios_gestion
 
-    total_costes_importacion = (
-        gestion_origen
-        + revision_origen
-        + transporte
-        + otros_costes_origen
-        + impuesto_matriculacion
-        + proceso_matriculacion
-        + revision_post_compra
-        + honorarios_gestion
+    total_costes = (
+        gestion_origen + revision_origen + transporte +
+        otros_costes_origen + impuesto_matriculacion +
+        proceso_matriculacion + revision_post_compra +
+        honorarios_gestion
     )
 
-    salida["TOTAL DE COSTES DE IMPORTACIÓN"] = total_costes_importacion
-
-    total_cliente = precio_origen + total_costes_importacion
-    total_cliente_redondeado = math.ceil(total_cliente / 100) * 100
-
-    salida["TOTAL DE COSTE PARA CLIENTE"] = total_cliente_redondeado
+    salida["TOTAL DE COSTES DE IMPORTACIÓN"] = total_costes
+    salida["TOTAL DE COSTE PARA CLIENTE"] = math.ceil(
+        (precio_origen + total_costes) / 100
+    ) * 100
 
     return salida
 
 
 # -------------------------------------------------
-# Generar Excel de salida
+# Excel de salida
 # -------------------------------------------------
 def generar_excel_salida(salida):
-    df = pd.DataFrame(
-        list(salida.items()),
-        columns=["Concepto", "Importe (€)"]
-    )
-
+    df = pd.DataFrame(list(salida.items()), columns=["Concepto", "Importe (€)"])
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
-
-    df.to_excel(
-        tmp.name,
-        index=False,
-        sheet_name="Resultado"
-    )
-
+    df.to_excel(tmp.name, index=False)
     return tmp.name
 
 
@@ -141,39 +132,32 @@ def inicio():
     modelos = obtener_modelos_desde_tablas()
 
     if request.method == "POST":
-
         modelo = request.form["MODELO"]
         precio_origen = float(request.form["PRECIO EN ORIGEN"])
 
-        fecha_texto = request.form["FECHA DE PRIMERA MATRICULACIÓN"]
-        fecha_matriculacion = datetime.strptime(fecha_texto, "%Y-%m-%d").date()
-        edad_real = calcular_edad(fecha_matriculacion)
+        fecha = datetime.strptime(
+            request.form["FECHA DE PRIMERA MATRICULACIÓN"], "%Y-%m-%d"
+        ).date()
+        edad = calcular_edad(fecha)
 
-        gestion_origen = float(request.form["COSTE DE GESTIÓN EN ORIGEN"])
-        revision_origen = float(request.form["COSTE DE REVISIÓN EN ORIGEN"])
+        gestion = float(request.form["COSTE DE GESTIÓN EN ORIGEN"])
+        revision = float(request.form["COSTE DE REVISIÓN EN ORIGEN"])
         transporte = float(request.form["COSTE DE TRANSPORTE"])
-        otros_costes_origen = float(request.form["OTROS COSTES EN ORIGEN"])
-        proceso_matriculacion = float(request.form["PROCESO DE MATRICULACIÓN"])
-        revision_post_compra = float(request.form["REVISION POST COMPRA"])
-        honorarios_gestion = float(request.form["HONORARIOS DE GESTIÓN"])
+        otros = float(request.form["OTROS COSTES EN ORIGEN"])
+        proceso = float(request.form["PROCESO DE MATRICULACIÓN"])
+        post = float(request.form["REVISION POST COMPRA"])
+        honorarios = float(request.form["HONORARIOS DE GESTIÓN"])
 
         if modelo == "NO ESTÁ EN TABLAS":
-            base_impuesto = precio_origen
+            base = precio_origen
         else:
-            base_impuesto = obtener_valor_fiscal(modelo, edad_real)
+            base = obtener_valor_fiscal(modelo, edad)
 
-        impuesto_matriculacion = base_impuesto * 0.1475
+        impuesto = base * 0.1475
 
         salida = construir_salida_epigrafe_3(
-            precio_origen,
-            gestion_origen,
-            revision_origen,
-            transporte,
-            otros_costes_origen,
-            impuesto_matriculacion,
-            proceso_matriculacion,
-            revision_post_compra,
-            honorarios_gestion
+            precio_origen, gestion, revision, transporte,
+            otros, impuesto, proceso, post, honorarios
         )
 
         session["salida"] = salida
@@ -182,22 +166,17 @@ def inicio():
 
 
 # -------------------------------------------------
-# Descarga del Excel
+# Descargar Excel
 # -------------------------------------------------
 @app.route("/descargar_excel", methods=["POST"])
 def descargar_excel():
     salida = session.get("salida")
-
     if not salida:
-        return "No hay datos para exportar", 400
+        return "No hay datos", 400
 
-    ruta_excel = generar_excel_salida(salida)
-
-    return send_file(
-        ruta_excel,
-        as_attachment=True,
-        download_name="coste_importacion_porsche.xlsx"
-    )
+    ruta = generar_excel_salida(salida)
+    return send_file(ruta, as_attachment=True,
+                     download_name="coste_importacion_porsche.xlsx")
 
 
 if __name__ == "__main__":
